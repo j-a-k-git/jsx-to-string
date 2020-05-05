@@ -10,21 +10,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alansouzati/jsx-to-string.git"
+    "url": "git+https://github.com/j-a-k-git/jsx-to-string.git"
   },
   "keywords": [
     "react",
     "jsx",
-    "parser"
+    "parser",
+    "string",
+    "converter"
   ],
   "authors": [
+    "j-a-k-git",
     "alansouzati"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alansouzati/jsx-to-string/issues"
+    "url": "https://github.com/j-a-k-git/jsx-to-string/issues"
   },
-  "homepage": "https://github.com/alansouzati/jsx-to-string#readme",
+  "homepage": "https://github.com/j-a-k-git/jsx-to-string#readme",
   "dependencies": {
     "immutable": "^4.0.0-rc.9",
     "json-stringify-pretty-compact": "^1.0.1",
@@ -40,5 +43,9 @@
     "babel-preset-react": "^6.1.18",
     "jest": "^22.4.4",
     "tape": "^4.0.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost:55444/"
   }
 }

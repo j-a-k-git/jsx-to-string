@@ -2,7 +2,7 @@
 
 Parse your React JSX components to string
 
-[![Build Status](https://api.travis-ci.org/grommet/jsx-to-string.svg)](https://travis-ci.org/grommet/jsx-to-string)
+![Node.js CI](https://github.com/j-a-k-git/jsx-to-string/workflows/Node.js%20CI/badge.svg)
 
 ### Install
 

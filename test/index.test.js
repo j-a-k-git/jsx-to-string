@@ -10,6 +10,25 @@ const Basic = React.createClass({
   }
 });
 
+const withHoc = (WrappedComponent) => {
+  const HOC = React.createClass({
+    render() {
+      return (
+        <WrappedComponent />
+      );
+    }
+  });
+  return HOC;
+};
+
+const FunctionalComp = (props) => {
+  return (
+    <div />
+  )
+}
+
+const HocComp = withHoc(FunctionalComp);
+
 const DefaultProp = React.createClass({
 
   getDefaultProps() {
@@ -37,6 +56,14 @@ test('test a basic react component', () => (
   expect(jsxToString(<Basic />)).toMatchSnapshot()
 ));
 
+test('test a functional component', () => (
+  expect(jsxToString(<FunctionalComp />)).toMatchSnapshot()
+));
+
+test('test a hoc react component', () => (
+  expect(jsxToString(<HocComp />)).toMatchSnapshot()
+));
+
 test('test a basic react component with default props', () => (
   expect(jsxToString(<DefaultProp test="abc" />)).toMatchSnapshot()
 ));
@@ -51,14 +78,14 @@ test('test a react component with basic props', () => (
       test="abc"
       test2={4}
       test4={true}
-      test5={{abc: "abc"}}
+      test5={{ abc: "abc" }}
       test6=""
     />
   )).toMatchSnapshot()
 ));
 
 test('test a react component with function props', () => (
-  expect(jsxToString(<Basic test1={() => {}} />)).toMatchSnapshot()
+  expect(jsxToString(<Basic test1={() => { }} />)).toMatchSnapshot()
 ));
 
 test('test a react component with react props', () => (
@@ -76,11 +103,11 @@ test('test a react component with custom name function', () => {
 
   const output = jsxToString(
     <Basic test1={_testCallBack1} test2={_testCallBack2} />, {
-      keyValueOverride: {
-        test1: '_testCallBack1',
-        test2: '_testCallBack2'
-      }
+    keyValueOverride: {
+      test1: '_testCallBack1',
+      test2: '_testCallBack2'
     }
+  }
   );
 
   expect(output).toMatchSnapshot();
@@ -116,8 +143,8 @@ test('test a react component with function code enabled', () => {
 
   const output = jsxToString(
     <Basic test1={_testCallBack1} />, {
-      useFunctionCode: true
-    }
+    useFunctionCode: true
+  }
   );
 
   expect(output).toMatchSnapshot();
@@ -130,9 +157,9 @@ test('test a react component with function name enabled', () => {
 
   let output = jsxToString(
     <Basic test1={_testCallBack1} />, {
-      useFunctionCode: true,
-      functionNameOnly: true
-    }
+    useFunctionCode: true,
+    functionNameOnly: true
+  }
   );
 
   expect(output).toMatchSnapshot();
@@ -201,7 +228,7 @@ test('test a react component with spread operator', () => {
   };
 
   const output = jsxToString(
-    <Basic {...someProps}/>
+    <Basic {...someProps} />
   );
 
   expect(output).toMatchSnapshot();
@@ -228,7 +255,7 @@ test('test a react component with undefined prop', () => (
 
 test('test a react component with immutable prop', () => (
   expect(jsxToString(
-    <Basic prop={fromJS({test: 'abc'})} />
+    <Basic prop={fromJS({ test: 'abc' })} />
   )).toMatchSnapshot()
 ));
 
@@ -237,7 +264,7 @@ test('test a react component with multiple children and immutable props', () => 
     jsxToString(
       <Basic>
         <BasicChild>
-          <BasicChild props={fromJS({test: 'abc'})}>
+          <BasicChild props={fromJS({ test: 'abc' })}>
             <BasicChild>
               Title
             </BasicChild>
@@ -281,7 +308,7 @@ test('test a react component with multiple ignore tags', () => (
 
 test('test a simple react component with boolean props and shortBooleanSyntax on', () => (
   expect(jsxToString(
-    <Basic test test2={false} test3={true}/>,
+    <Basic test test2={false} test3={true} />,
     {
       shortBooleanSyntax: true,
     }
@@ -291,7 +318,7 @@ test('test a simple react component with boolean props and shortBooleanSyntax on
 test('test a complex react component with boolean props and shortBooleanSyntax on', () => (
   expect(jsxToString(
     <Basic test="abc" test2={4} test4={true}
-      test5={{abc: "abc"}} test6="" test7={false} test8>
+      test5={{ abc: "abc" }} test6="" test7={false} test8>
       <BasicChild test1 test2={false} test3={5} test4={6}>
         Title 1
       </BasicChild>
