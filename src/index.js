@@ -1,4 +1,4 @@
-import React, { isValidElement } from 'react';
+import { isValidElement } from 'react';
 import stringify from 'json-stringify-pretty-compact';
 import { isImmutable } from 'immutable';
 

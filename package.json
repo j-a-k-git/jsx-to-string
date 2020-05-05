@@ -1,6 +1,6 @@
 {
   "name": "as-jsx-string",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Parse your React JSX component to string",
   "main": "lib/index.js",
   "scripts": {
@@ -30,8 +30,10 @@
   "homepage": "https://github.com/j-a-k-git/jsx-to-string#readme",
   "dependencies": {
     "immutable": "^4.0.0-rc.9",
-    "json-stringify-pretty-compact": "^1.0.1",
-    "react": "^0.14.0"
+    "json-stringify-pretty-compact": "^1.0.1"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1"
   },
   "devDependencies": {
     "babel-cli": "^6.1.18",
@@ -41,7 +43,9 @@
     "babel-plugin-transform-object-rest-spread": "^6.3.13",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
+    "create-react-class": "^15.6.3",
     "jest": "^22.4.4",
+    "react": "^16.13.1",
     "tape": "^4.0.0"
   },
   "jest": {

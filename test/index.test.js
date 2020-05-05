@@ -1,8 +1,9 @@
 import React from 'react';
 import jsxToString from '../src/index';
 import { fromJS } from 'immutable';
+import createReactClass  from 'create-react-class';
 
-const Basic = React.createClass({
+const Basic = createReactClass({
   render() {
     return (
       <div />
@@ -11,7 +12,7 @@ const Basic = React.createClass({
 });
 
 const withHoc = (WrappedComponent) => {
-  const HOC = React.createClass({
+  const HOC = createReactClass({
     render() {
       return (
         <WrappedComponent />
@@ -29,7 +30,7 @@ const FunctionalComp = (props) => {
 
 const HocComp = withHoc(FunctionalComp);
 
-const DefaultProp = React.createClass({
+const DefaultProp = createReactClass({
 
   getDefaultProps() {
     return {
@@ -44,7 +45,7 @@ const DefaultProp = React.createClass({
   }
 });
 
-const BasicChild = React.createClass({
+const BasicChild = createReactClass({
   render() {
     return (
       <div />
