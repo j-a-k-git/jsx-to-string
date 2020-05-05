@@ -2,14 +2,14 @@ import React, { isValidElement } from 'react';
 import stringify from 'json-stringify-pretty-compact';
 import { isImmutable } from 'immutable';
 
-function isDefaultProp (defaultProps, key, value) {
+function isDefaultProp(defaultProps, key, value) {
   if (!defaultProps) {
     return false;
   }
   return defaultProps[key] === value;
 }
 
-function stringifyObject (object, opts) {
+function stringifyObject(object, opts) {
   let result;
   if (Array.isArray(object)) {
     result = object.map(item => stringifyObject(item));
@@ -38,7 +38,7 @@ function stringifyObject (object, opts) {
 
 const _JSX_REGEXP = /"<.+>"/g;
 
-function serializeItem (item, options, delimit=true) {
+function serializeItem(item, options, delimit = true) {
   let result;
 
   if (isImmutable(item)) {
@@ -51,7 +51,7 @@ function serializeItem (item, options, delimit=true) {
     var indentation = new Array(options.spacing + 1).join(' ');
     const delimiter = delimit ? ', ' : `\n${indentation}`;
     const items = item.map(i => serializeItem(i, options)).join(delimiter);
-    result = delimit ? `[${items}]` : `${items}` ;
+    result = delimit ? `[${items}]` : `${items}`;
   } else if (isValidElement(item)) {
     result = jsxToString(item, options);
   } else if (typeof item === 'object') {
@@ -68,11 +68,22 @@ function serializeItem (item, options, delimit=true) {
   return result;
 }
 
-function jsxToString (component, options) {
+const _HOC_REGEXP = /\((.*)\)/;
+
+function jsxToString(component, options) {
+
+  let dName = component.type.displayName || component.type.name || component.type;
+  let hocs;
+
+  if (typeof (dName) === 'string') {
+    hocs = dName.match(_HOC_REGEXP);
+  }
+  if (hocs && hocs.length > 1) {
+    dName = hocs[1];
+  }
 
   const baseOpts = {
-    displayName: component.type.displayName || component.type.name ||
-      component.type,
+    displayName: dName,
     ignoreProps: [],
     ignoreTags: [],
     keyValueOverride: {},
@@ -80,7 +91,7 @@ function jsxToString (component, options) {
     detectFunctions: false
   };
 
-  const opts = {...baseOpts, ...options};
+  const opts = { ...baseOpts, ...options };
 
   // Do not return anything if the root tag should be ignored
   if (opts.ignoreTags.indexOf(opts.displayName) !== -1) {
@@ -95,32 +106,32 @@ function jsxToString (component, options) {
   if (component.props) {
     const indentation = new Array(opts.spacing + 3).join(' ');
     componentData.props = Object.keys(component.props)
-    .filter(key => {
-      return (key !== 'children' &&
-        ! isDefaultProp(component.type.defaultProps, key,
-          component.props[key]) &&
-        opts.ignoreProps.indexOf(key) === -1)
-    }).map(key => {
-      let value;
-      if (typeof opts.keyValueOverride[key] === 'function') {
-        value = opts.keyValueOverride[key](component.props[key]);
-      } else if (opts.keyValueOverride[key]) {
-        value = opts.keyValueOverride[key]
-      } else if (opts.shortBooleanSyntax && typeof component.props[key] === 'boolean' && component.props[key]) {
-        return key;
-      } else {
-        value = serializeItem(component.props[key], {...opts, key});
-      }
-      if (typeof value !== 'string' || value[0] !== "'") {
-        value = `{${value}}`;
-      }
-      // Is `value` a multi-line string?
-      const valueLines = value.split(/\r\n|\r|\n/);
-      if (valueLines.length > 1) {
-        value = valueLines.join(`\n${indentation}`);
-      }
-      return `${key}=${value}`;
-    }).join(`\n${indentation}`);
+      .filter(key => {
+        return (key !== 'children' &&
+          !isDefaultProp(component.type.defaultProps, key,
+            component.props[key]) &&
+          opts.ignoreProps.indexOf(key) === -1)
+      }).map(key => {
+        let value;
+        if (typeof opts.keyValueOverride[key] === 'function') {
+          value = opts.keyValueOverride[key](component.props[key]);
+        } else if (opts.keyValueOverride[key]) {
+          value = opts.keyValueOverride[key]
+        } else if (opts.shortBooleanSyntax && typeof component.props[key] === 'boolean' && component.props[key]) {
+          return key;
+        } else {
+          value = serializeItem(component.props[key], { ...opts, key });
+        }
+        if (typeof value !== 'string' || value[0] !== "'") {
+          value = `{${value}}`;
+        }
+        // Is `value` a multi-line string?
+        const valueLines = value.split(/\r\n|\r|\n/);
+        if (valueLines.length > 1) {
+          value = valueLines.join(`\n${indentation}`);
+        }
+        return `${key}=${value}`;
+      }).join(`\n${indentation}`);
 
     if (component.key && opts.ignoreProps.indexOf('key') === -1) {
       componentData.props += `key='${component.key}'`;
@@ -136,19 +147,19 @@ function jsxToString (component, options) {
     const indentation = new Array(opts.spacing + 1).join(' ');
     if (Array.isArray(component.props.children)) {
       componentData.children = component.props.children
-      .reduce((a, b) => a.concat(b), []) // handle Array of Arrays
-      .filter(child => {
-        if (child && !isValidElement(child)) {
-          return true;
-        }
-        const childShouldBeRemoved = child &&
-          child.type &&
-          opts.ignoreTags.indexOf(child.type.displayName || child.type.name || child.type) === -1;
-        // Filter the tag if it is in the ignoreTags list or if is not a tag
-        return childShouldBeRemoved;
-      })
-      .map(child => serializeItem(child, opts, false))
-      .join(`\n${indentation}`);
+        .reduce((a, b) => a.concat(b), []) // handle Array of Arrays
+        .filter(child => {
+          if (child && !isValidElement(child)) {
+            return true;
+          }
+          const childShouldBeRemoved = child &&
+            child.type &&
+            opts.ignoreTags.indexOf(child.type.displayName || child.type.name || child.type) === -1;
+          // Filter the tag if it is in the ignoreTags list or if is not a tag
+          return childShouldBeRemoved;
+        })
+        .map(child => serializeItem(child, opts, false))
+        .join(`\n${indentation}`);
     } else {
       componentData.children =
         serializeItem(component.props.children, opts, false);

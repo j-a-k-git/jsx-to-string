@@ -23,6 +23,10 @@ exports[`test a complex react component with boolean props and shortBooleanSynta
 </Basic>"
 `;
 
+exports[`test a functional component 1`] = `"<FunctionalComp />"`;
+
+exports[`test a hoc react component 1`] = `"<HOC />"`;
+
 exports[`test a react component with a null children 1`] = `
 "<Basic>
   <BasicChild>
